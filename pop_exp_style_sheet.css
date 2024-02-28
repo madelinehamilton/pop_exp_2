@@ -1,0 +1,11 @@
+body {
+  background-color: #FFFDE0;
+  input[type='radio'] {
+    transform: scale(1.5);
+}
+label{
+    vertical-align: middle;
+    padding: 10px;
+    margin: 2px;
+ }
+}

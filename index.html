@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Personalizing Melodic Preference Curves with Melodies from Popular Music</title>
+    <script src="jspsych/jspsych.js"></script>
+    <script src="jspsych/plugin-html-keyboard-response.js"></script>
+    <script src="jspsych/plugin-html-slider-response.js"></script>
+    <script src="jspsych/plugin-survey-multi-choice.js"></script>
+    <script src="jspsych/plugin-survey-html-form.js"></script>
+    <script src="jspsych/plugin-survey-text.js"></script>
+    <script src="jspsych/plugin-survey.js"></script>
+    <script src="jspsych/plugin-audio-slider-response.js"></script>
+    <script src="jspsych/plugin-audio-keyboard-response.js"></script>
+    <script src="practice_mel.js"></script>
+    <script src="melody_trials_data.js"></script>
+    <script src="big_five_stimuli.js"></script>
+    <script src="bmrq.js"></script>
+    <script src="stomp.js"></script>
+    <script src="gold_msi.js"></script>
+    <link rel="stylesheet" href="jspsych/jspsych.css">
+    <link rel="stylesheet" href="jspsych/survey_plugin_stylesheet.css">
+    <link rel="stylesheet" href="pop_exp_style_sheet.css">
+    <style>
+        div
+        {
+         word-wrap:break-word;
+         width: 1000px;
+        }
+    </style>
+    <style type="text/css"> p.space {line-height:150%;} </style>
+    <style type="text/css"> p.space_up_head {margin-top: -10px;} </style>
+    <style type="text/css"> p.space_up_body {line-height:150%; } </style>
+  </head>
+  <body>{ background-color: #DBF9FC; }</body>
+  <script>
+
+    /* initialize jsPsych */
+    var jsPsych = initJsPsych({
+      minimum_valid_rt: 1000,
+      on_finish: function() {
+        jsPsych.data.get().localSave('csv','pilot_data.csv');
+      }
+    });
+
+    /* create timeline */
+    var timeline = [];
+
+    /* Introductory text, experiment information and consent form */
+    /* Welcome message text */
+    var intro_text = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>Thank you for considering participation in this study.
+      In order to decide whether or not you'd like to take part in this study, it is important for you to understand what
+      doing so involves.</p><p class = 'space'; style = 'text-align: left; font-size: 30px;'>Press the spacebar to learn about
+      what participating in this study will be like, should you choose to participate.</p>
+      `,
+      choices: "NO_KEYS",
+
+      trial_duration: 9000
+    };
+
+    /* Welcome message text + response */
+    var intro_resp = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>Thank you for considering participation in this study.
+      In order to decide whether or not you'd like to take part in this study, it is important for you to understand what
+      doing so involves.</p><p class = 'space'; style = 'text-align: left; font-size: 30px;'>Press the spacebar to learn about
+      what participating in this study will be like, should you choose to participate.</p>
+      `,
+      choices: [' ']
+    };
+
+    /* Info text 1 */
+    var info_text_1 = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+      <p class = 'space'; style = 'font-size: 40px;'>Study Goals and Procedures</p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>The aim of this experiment is to study people’s liking
+      of melodies from popular music. You will respond to a series of melodies. For each melody, you will indicate how much you
+      enjoy the melody and how familiar you are with it. After this, you will answer a series of survey questions.</p><p class = 'space'; style = 'text-align: left; font-size: 30px;'>
+      Press the spacebar to continue.</p>
+      `,
+      choices: "NO_KEYS",
+
+      trial_duration: 12000
+    };
+
+    /* Info text 1 response */
+    var info_text_1_resp = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+      <p class = 'space'; style = 'font-size: 40px;'>Study Goals and Procedures</p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>The aim of this experiment is to study people’s liking
+      of melodies from popular music. You will respond to a series of melodies. For each melody, you will indicate how much you
+      enjoy the melody and how familiar you are with it. After this, you will answer a series of survey questions.</p><p class = 'space'; style = 'text-align: left; font-size: 30px;'>
+      Press the spacebar to continue.</p>
+      `,
+      choices: [' ']
+    };
+
+    /* Info text 2 */
+    var info_text_2 = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+      <p class = 'space'; style = 'font-size: 40px;'>Privacy and Risks</p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>The authors of the study plan to publish its results.
+      No information that could identify you will be published. The data from this study will not contain any personal
+      information and will be anonymised through the use of a random identifier for each participant. The information you
+      give in the study may be stored indefinitely so that it can be used for future studies. </p><p class = 'space'; style = 'text-align: left; font-size: 30px;'>
+      There are no known risks to participating in this study.</p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>Press the spacebar to continue.</p>
+      `,
+      choices: "NO_KEYS",
+
+      trial_duration: 13000
+    };
+
+    /* Info text 2 response */
+    var info_text_2_resp = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+      <p class = 'space'; style = 'font-size: 40px;'>Privacy and Risks</p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>The authors of the study plan to publish its results.
+      No information that could identify you will be published. The data from this study will not contain any personal
+      information and will be anonymised through the use of a random identifier for each participant. The information you
+      give in the study may be stored indefinitely so that it can be used for future studies. </p><p class = 'space'; style = 'text-align: left; font-size: 30px;'>
+      There are no known risks to participating in this study.</p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>Press the spacebar to continue.</p>
+      `,
+      choices: [' ']
+
+    };
+
+    /* Consent form */
+    var consent_text = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+      <p class = 'space'; style = 'font-size: 40px;'>Consent Form</p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>You have now learned what participating in this study
+      involves. Participation in this research study is your choice. You may refuse to participate, or leave the study at any
+      time. If you leave the study, the information you provided will be kept confidential. You may request, in writing, that
+      your identifiable information be destroyed. However, we cannot destroy any information that has already been published.
+      </p><p class = 'space'; style = 'text-align: left; font-size: 30px;'> I have read and understood this information.
+      By pressing the spacebar, I give my consent to participate in this research study.</p>
+      `,
+      choices: "NO_KEYS",
+
+      trial_duration: 17000
+    };
+
+    /* Consent form response */
+    var consent_text_resp = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+      <p class = 'space'; style = 'font-size: 40px;'>Consent Form</p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>You have now learned what participating in this study
+      involves. Participation in this research study is your choice. You may refuse to participate, or leave the study at any
+      time. If you leave the study, the information you provided will be kept confidential. You may request, in writing, that
+      your identifiable information be destroyed. However, we cannot destroy any information that has already been published.
+      </p><p class = 'space'; style = 'text-align: left; font-size: 30px;'> I have read and understood this information.
+      By pressing the spacebar, I give my consent to participate in this research study.</p>
+      `,
+      choices: [' ']
+    };
+
+    /* Post-consent form welcome screen text */
+    var welcome_text = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>Thank you for agreeing to participate in this study.
+      The study will take approximately 1 hour to complete, including a 5 minute break at the halfway point.
+      </p><p class = 'space'; style = 'text-align: left; font-size: 30px;'> When you are ready, press the space bar to begin.</p>
+      `,
+      choices: "NO_KEYS",
+
+      trial_duration: 7000
+    };
+
+    /* Post-consent form welcome screen response */
+    var welcome_text_resp = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>Thank you for agreeing to participate in this study.
+      The study will take approximately 1 hour to complete, including a 5 minute break at the halfway point.
+      </p><p class = 'space'; style = 'text-align: left; font-size: 30px;'> When you are ready, press the space bar to begin.</p>
+      `,
+      choices: [' ']
+
+    };
+
+    /* Melody trial instruction text */
+    var melody_instruction_text = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+      <p class = 'space'; style = 'text-align: left; font-size: 25px;'>In this portion of the experiment, you will be presented
+      with a series of melodies. For each melody, you will do the following:
+      </p><p class = 'space'; style = 'text-align: left; font-size: 25px;'> 1. Listen to the melody. You may only listen to each melody once.</p>
+      <p class = 'space'; style = 'text-align: left; font-size: 25px;'> 2. Rate how much you like the melody on a scale from 1
+      (dislike very much) to 7 (like very much).</p>
+      <p class = 'space'; style = 'text-align: left; font-size: 25px;'> 3. Indicate if you are familiar with the melody (yes/no).
+      Only indicate 'yes' if you can name the song the melody comes from and the song's artist(s). </p>
+      <p class = 'space'; style = 'text-align: left; font-size: 25px;'> 4. If you answered 'yes' in Step 3, you will type the
+      name of the song the melody comes from and the song's artist(s).</p>
+      <p class = 'space'; style = 'text-align: left; font-size: 25px;'> Press the space bar to continue. </p>
+      `,
+      choices: "NO_KEYS",
+
+      trial_duration: 28000
+    };
+
+    /* Melody trial instruction response */
+    var melody_instruction_text_resp = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+      <p class = 'space'; style = 'text-align: left; font-size: 25px;'>In this portion of the experiment, you will be presented
+      with a series of melodies. For each melody, you will do the following:
+      </p><p class = 'space'; style = 'text-align: left; font-size: 25px;'> 1. Listen to the melody. You may only listen to each melody once.</p>
+      <p class = 'space'; style = 'text-align: left; font-size: 25px;'> 2. Rate how much you like the melody on a scale from 1
+      (dislike very much) to 7 (like very much).</p>
+      <p class = 'space'; style = 'text-align: left; font-size: 25px;'> 3. Indicate if you are familiar with the melody (yes/no).
+      Only indicate 'yes' if you can name the song the melody comes from and the song's artist(s). </p>
+      <p class = 'space'; style = 'text-align: left; font-size: 25px;'> 4. If you answered 'yes' in Step 3, you will type the
+      name of the song the melody comes from and the song's artist(s).</p>
+      <p class = 'space'; style = 'text-align: left; font-size: 25px;'> Press the space bar to continue. </p>
+      `,
+      choices: [' ']
+
+    };
+
+    /* Rating the melodies text */
+    var rating_mel_text = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>When rating the melodies, please:
+      </p><p class = 'space'; style = 'text-align: left; font-size: 30px;'> 1. Try to use the full range of the scale and rate
+      each melody <b>relative</b> to the melodies you've heard previously in the experiment.</p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'> 2. Try to imagine that the melodies are being performed
+      live by a musician or singer and respond accordingly. All the melodies are rendered on the computer using a synthesised
+      instrument and without expressive timing or accompanying background music, but try to respond to the melodies as if they
+      are live/expressive performances. </p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'> Press the space bar to continue. </p>
+      `,
+      choices: "NO_KEYS",
+
+      trial_duration: 20000
+    };
+
+    /* Rating the melodies text response */
+    var rating_mel_text_response = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>When rating the melodies, please:
+      </p><p class = 'space'; style = 'text-align: left; font-size: 30px;'> 1. Try to use the full range of the scale and rate
+      each melody <b>relative</b> to the melodies you've heard previously in the experiment.</p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'> 2. Try to imagine that the melodies are being performed
+      live by a musician or singer and respond accordingly. All the melodies are rendered on the computer using a synthesised
+      instrument and without expressive timing or accompanying background music, but try to respond to the melodies as if they
+      are live/expressive performances. </p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'> Press the space bar to continue. </p>
+      `,
+      choices: [' ']
+    };
+
+    /* Attention trial warning text */
+    var attention_trial_text = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'><b>Be careful!</b> Some trials are meant to make
+      sure you are paying attention. In these trials, you will be asked to give a specific rating regardless of how much
+      you like the melody, e.g., "Please rate this melody as Moderately Dislike."</p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>Press the spacebar to begin.</p>
+      `,
+      choices: "NO_KEYS",
+
+      trial_duration: 10000
+    };
+
+    /* Attention trial warning response */
+    var attention_trial_response = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'><b>Be careful!</b> Some trials are meant to make
+      sure you are paying attention. In these trials, you will be asked to give a specific rating regardless of how much
+      you like the melody, e.g., "Please rate this melody as Moderately Dislike."</p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>Press the spacebar to begin.</p>
+      `,
+      choices: [' ']
+    };
+
+    /* Practice melody instruction text */
+    var practice_melody_text = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>You will first be presented with two practice trials.
+      Use the practice trials to:</p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'> 1. Familiarize yourself with how this portion of the
+      experiment works. </p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'> 2. Adjust the volume of your device so the melodies
+      are played at a comfortable volume.</p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'> Press the space bar to begin the practice trials.</p>
+      `,
+      choices: "NO_KEYS",
+
+      trial_duration: 10000
+    };
+
+    /* Practice melody instruction response */
+    var practice_melody_text_resp = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>You will first be presented with two practice trials.
+      Use the practice trials to:</p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'> 1. Familiarize yourself with how this portion of the
+      experiment works. </p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'> 2. Adjust the volume of your device so the melodies
+      are played at a comfortable volume.</p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'> Press the space bar to begin the practice trials.</p>
+      `,
+      choices: [' ']
+    };
+
+    /* Practice melody trial */
+    var practice_mel_trial = {
+        type: jsPsychAudioSliderResponse,
+        stimulus: jsPsych.timelineVariable("midi_name"),
+        labels: [`<div style = 'margin-left: -417px; margin-top: 10px; font-size: 25px;'>1</div>`, `<div style = 'margin-left: -417px; margin-top: 10px; font-size: 25px;'>2</div>`, `<div style = 'margin-left: -417px; margin-top: 10px; font-size: 25px;'>3</div>`,`<div style = 'margin-left: -417px; margin-top: 10px; font-size: 25px;'>4</div>`,`<div style = 'margin-left: -417px; margin-top: 10px; font-size: 25px;'>5</div>`, `<div style = 'margin-left: -417px; margin-top: 10px; font-size: 25px;'>6</div>`, `<div style = 'margin-left: -417px; margin-top: 10px; font-size: 25px;'>7</div>`],
+        min: 1,
+        max: 7,
+        step: 1,
+        slider_start: 4,
+        button_label: 'Submit',
+        prompt: `<div style = 'margin-bottom: 50px; font-size: 23px;line-height:75%;'>
+        <p>How much do you like this melody?<\p>
+        <p>1 - Strongly Dislike</p>
+        <p>2 - Moderately Dislike</p>
+        <p>3 - Dislike a Little</p>
+        <p>4 - Neither Like nor Dislike</p>
+        <p>5 - Like a Little</p>
+        <p>6 - Like Moderately</p>
+        <p>7 - Like Strongly</p>
+        </div>`,
+        response_allowed_while_playing: false
+    };
+
+    /* Familiarity trial */
+    var fam_key_resp = {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: `<div style = 'margin-bottom: 75px; margin-left: 13px; font-size: 25px;'><p class = 'space'; style = 'text-align: left; font-size: 30px;'>
+        Do you know the title and artist(s) of the song this melody comes from? Press the \'y\' key for yes and the
+        \'n\' key for no.</p></div>`,
+        choices: ['y', 'n']
+    };
+
+    /* Song title trial */
+    var song_title_trial = {
+        type: jsPsychSurveyHtmlForm,
+        preamble: `<div style = 'margin-bottom: 75px; margin-left: 13px; font-size: 25px;'><p class = 'space'; style = 'text-align: left; font-size: 30px;'>
+        Please type the name of the song this melody comes from. Do not worry about spelling or grammar. Press the Submit
+        button when you are finished.</p></div>`,
+        html:`<input type="text" id="song_name" name="song_name" size="20" />`,
+        button_label: 'Submit'
+    };
+
+    /* Song artist trial */
+    var artist_trial = {
+        type: jsPsychSurveyHtmlForm,
+        preamble: `<div style = 'margin-bottom: 75px; margin-left: 13px; font-size: 25px;'><p class = 'space'; style = 'text-align: left; font-size: 30px;'>
+        Please type the artist(s) of the song the melody is from. Do not worry about spelling or grammar. Press the Submit
+        button when you are finished.</p></div>`,
+        html:`<input type="text" id="artist_name" name="artist_name" size="20" />`,
+        button_label: 'Submit'
+    };
+
+    /* If node, which only executes song_title_trial and artist_trial if the participant pressed the y key. */
+    var familiar_if_node = {
+        timeline: [song_title_trial, artist_trial],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(jsPsych.pluginAPI.compareKeys(data.response, 'n')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    };
+
+    /* Pink noise trial */
+    var pink_noise_trial = {
+        type: jsPsychAudioKeyboardResponse,
+        stimulus: 'sounds/pink_noise.wav',
+        choices: "NO_KEYS",
+        prompt: "<p class = 'space'; style = 'font-size: 30px;'>The next melody will play in 5 seconds.</p>",
+        trial_ends_after_audio: true
+    };
+
+    /* Practice melody procedure */
+    var practice_mel_procedure = {
+      timeline: [pink_noise_trial, practice_mel_trial, fam_key_resp, familiar_if_node],
+      timeline_variables: practice_mel_array,
+      repetitions: 1,
+      randomize_order: true
+    };
+
+    /* Practice melodies over text */
+    var practice_trials_over_text = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>The practice trials are now finished. In the next
+      section, you will listen and respond to 48 melodies in the same way that you did with the practice melodies. This
+      will take approximately 30 minutes. </p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'> It is important that you complete this section of
+      the experiment uninterrupted in a quiet environment.  </p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'> Press the space bar to begin listening to the melodies. </p>
+      `,
+      choices: "NO_KEYS",
+
+      trial_duration: 12000
+    };
+
+    /* Practice melodies over response */
+    var practice_trials_over_text_resp = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>The practice trials are now finished. In the next
+      section, you will listen and respond to 48 melodies in the same way that you did with the practice melodies. This
+      will take approximately 30 minutes. </p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'> It is important that you complete this section of
+      the experiment uninterrupted in a quiet environment.  </p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'> Press the space bar to begin listening to the melodies. </p>
+      `,
+      choices: [' ']
+
+    };
+
+    /* Melody trial */
+    var mel_trial = {
+        type: jsPsychAudioSliderResponse,
+        stimulus: jsPsych.timelineVariable("stimulus_name"),
+        labels: [`<div style = 'margin-left: -417px; margin-top: 10px; font-size: 25px;'>1</div>`, `<div style = 'margin-left: -417px; margin-top: 10px; font-size: 25px;'>2</div>`, `<div style = 'margin-left: -417px; margin-top: 10px; font-size: 25px;'>3</div>`,`<div style = 'margin-left: -417px; margin-top: 10px; font-size: 25px;'>4</div>`,`<div style = 'margin-left: -417px; margin-top: 10px; font-size: 25px;'>5</div>`, `<div style = 'margin-left: -417px; margin-top: 10px; font-size: 25px;'>6</div>`, `<div style = 'margin-left: -417px; margin-top: 10px; font-size: 25px;'>7</div>`],
+        min: 1,
+        max: 7,
+        step: 1,
+        slider_start: 4,
+        button_label: 'Submit',
+        prompt: () => { return `<div style = 'margin-bottom: 50px; font-size: 23px;line-height:75%;'>
+        <p>${jsPsych.timelineVariable("prompt_text")}<\p>
+        <p>1 - Strongly Dislike</p>
+        <p>2 - Moderately Dislike</p>
+        <p>3 - Dislike a Little</p>
+        <p>4 - Neither Like nor Dislike</p>
+        <p>5 - Like a Little</p>
+        <p>6 - Like Moderately</p>
+        <p>7 - Like Strongly</p>
+        </div>`;},
+        response_allowed_while_playing: false
+    };
+
+    /* Melody procedure */
+    var mel_procedure = {
+      timeline: [pink_noise_trial, mel_trial, fam_key_resp, familiar_if_node],
+      timeline_variables: mel_trial_array,
+      repetitions: 1,
+      randomize_order: true
+    };
+
+    /* Melody trials over text */
+    var melody_trials_over_text = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>The first portion of the experiment is now over.</p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'> If you need to, take a 5 minute break before continuing
+      to the second half of the experiment, which will take approximately 30 minutes. </p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'> Press the space bar when you are ready for the next
+      portion of the experiment. </p>
+      `,
+      choices: "NO_KEYS",
+
+      trial_duration: 10000
+    };
+
+    /* Melody trials over response */
+    var melody_trials_over_text_resp = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>The first portion of the experiment is now over.</p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'> If you need to, take a 5 minute break before continuing
+      to the second half of the experiment, which will take approximately 30 minutes. </p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'> Press the space bar when you are ready for the next
+      portion of the experiment. </p>
+      `,
+      choices: [' ']
+
+    };
+
+    /* Survey instruction text */
+    var survey_practice_text = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>The next section of the experiment will involve
+      answering various types of survey questions. There are two types of questions you will answer:</p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'> 1. Multiple Choice - you will responsd to the
+      presented question or statement by clicking the answer that is most accurate for you. </p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'> 2. Questions with Typed Responses - you will answer
+      the presented question by typing into a text box and clicking a "Submit" button.  </p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'> As with the melody trials, some questions are meant
+      to make sure you are paying attention. In these trials, you will be asked to give a specific response, e.g.,
+      "Please rate this statement as Neutral." </p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'> Press the spacebar to begin.</p>
+      `,
+      choices: "NO_KEYS",
+
+      trial_duration: 17000
+    };
+
+    /* Survey instruction response */
+    var survey_practice_text_resp = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>The next section of the experiment will involve
+      answering various types of survey questions. There are two types of questions you will answer:</p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'> 1. Multiple Choice - you will responsd to the
+      presented question or statement by clicking the answer that is most accurate for you. </p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'> 2. Questions with Typed Responses - you will answer
+      the presented question by typing into a text box and clicking a "Submit" button.  </p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'> As with the melody trials, some questions are meant
+      to make sure you are paying attention. In these trials, you will be asked to give a specific response, e.g.,
+      "Please rate this statement as Neutral." </p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'> Press the spacebar to begin.</p>
+      `,
+      choices: [' ']
+
+    };
+
+    /* Big Five instruction text */
+    var big_five_instructions_text = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>For this portion of the experiment, you will rate
+      your level of agreement with a series of statements on the scale provided. </p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>Be as honest as possible when rating each statement,
+      and treat each statement as if it were the only statement. That is, don't worry about the consistency of your ratings.</p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>Once you click on the rating scale, your response
+      will be recorded and the next statement will appear. You will not be able to edit previous ratings, so be careful when
+      recording your responses. </p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>Press the space bar to begin.</p>
+      `,
+      choices: "NO_KEYS",
+
+      trial_duration: 14000
+    };
+
+    /* Big Five instruction response */
+    var big_five_instructions_text_resp = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>For this portion of the experiment, you will rate
+      your level of agreement with a series of statements on the scale provided. </p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>Be as honest as possible when rating each statement,
+      and treat each statement as if it were the only statement. That is, don't worry about the consistency of your ratings.</p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>Once you click on the rating scale, your response
+      will be recorded and the next statement will appear. You will not be able to edit previous ratings, so be careful when
+      recording your responses. </p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>Press the space bar to begin.</p>
+      `,
+      choices: [' ']
+
+    };
+
+    /* Big Five trial */
+    var big_five_trial = {
+        type: jsPsychSurveyHtmlForm,
+        preamble: () => { return `<div style = 'margin-bottom: 75px; margin-left: 13px; font-size: 25px;'>${jsPsych.timelineVariable("big_five_q")}</div>`;},
+        html: `<div style = 'margin-bottom: 5px; font-size: 23px;line-height:200%;'>
+        <input type="radio" id="huey" name="drone" value="Strongly Disagree" />
+        <label for="huey">Strongly Disagree</label>
+        </div>
+
+        <div style = 'margin-bottom: 5px; font-size: 23px;line-height:200%;'>
+          <input type="radio" id="dewey" name="drone" value="Moderately Disagree" />
+          <label for="dewey">Moderately Disagree</label>
+        </div>
+
+        <div style = 'margin-bottom: 5px; font-size: 23px;line-height:200%;'>
+          <input type="radio" id="louie" name="drone" value="Mildly Disagree" />
+          <label for="louie">Mildly Disagree</label>
+        </div>
+
+        <div style = 'margin-bottom: 5px; font-size: 23px;line-height:200%;'>
+          <input type="radio" id="louie" name="drone" value="Neither Agree nor Disagree" checked />
+          <label for="louie">Neither Agree nor Disagree</label>
+        </div>
+
+        <div style = 'margin-bottom: 5px; font-size: 23px;line-height:200%;'>
+          <input type="radio" id="louie" name="drone" value="Mildly Agree" />
+          <label for="louie">Mildly Agree</label>
+        </div>
+
+        <div style = 'margin-bottom: 5px; font-size: 23px;line-height:200%;'>
+          <input type="radio" id="louie" name="drone" value="Moderately Agree" />
+          <label for="louie">Moderately Agree</label>
+        </div>
+
+        <div style = 'margin-bottom: 75px; font-size: 23px;line-height:200%;'>
+          <input type="radio" id="louie" name="drone" value="Strongly Agree" />
+          <label for="louie">Strongly Agree</label>
+        </div>`,
+        button_label: 'Submit',
+        data: {
+          question: jsPsych.timelineVariable("big_five_q")
+        }
+    };
+
+    /* Big Five procedure */
+    var big_five_procedure = {
+      timeline: [big_five_trial],
+      timeline_variables: big_five_array,
+      repetitions: 1,
+      randomize_order: true,
+    };
+
+    /* BMRQ instruction text */
+    var bmrq_instructions_text = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>For this portion of the experiment, you will continue
+      to rate statements using the scale provided. </p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>As with the previous section, be as honest as possible
+      with each response and be careful not to accidentally provide a response you did not intend to.</p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>Press the space bar to begin.</p>
+      `,
+      choices: "NO_KEYS",
+
+      trial_duration: 8000
+    };
+
+    /* BMRQ instruction response */
+    var bmrq_instructions_text_resp = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>For this portion of the experiment, you will continue
+      to rate statements using the scale provided. </p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>As with the previous section, be as honest as possible
+      with each response and be careful not to accidentally provide a response you did not intend to.</p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>Press the space bar to begin.</p>
+      `,
+      choices: [' ']
+    };
+
+    /* BMRQ trial */
+    var bmrq_trial = {
+        type: jsPsychSurveyHtmlForm,
+        preamble: () => { return `<div style = 'margin-bottom: 75px; margin-left: 13px; font-size: 25px;'>${jsPsych.timelineVariable("question")}</div>`;},
+        html: `<div style = 'margin-bottom: 5px; font-size: 23px;line-height:200%;'>
+        <input type="radio" id="huey" name="drone" value="Strongly Disagree" />
+        <label for="huey">Strongly Disagree</label>
+        </div>
+
+        <div style = 'margin-bottom: 5px; font-size: 23px;line-height:200%;'>
+          <input type="radio" id="dewey" name="drone" value="Moderately Disagree" />
+          <label for="dewey">Moderately Disagree</label>
+        </div>
+
+        <div style = 'margin-bottom: 5px; font-size: 23px;line-height:200%;'>
+          <input type="radio" id="louie" name="drone" value="Mildly Disagree" />
+          <label for="louie">Mildly Disagree</label>
+        </div>
+
+        <div style = 'margin-bottom: 5px; font-size: 23px;line-height:200%;'>
+          <input type="radio" id="louie" name="drone" value="Neither Agree nor Disagree" checked />
+          <label for="louie">Neither Agree nor Disagree</label>
+        </div>
+
+        <div style = 'margin-bottom: 5px; font-size: 23px;line-height:200%;'>
+          <input type="radio" id="louie" name="drone" value="Mildly Agree" />
+          <label for="louie">Mildly Agree</label>
+        </div>
+
+        <div style = 'margin-bottom: 5px; font-size: 23px;line-height:200%;'>
+          <input type="radio" id="louie" name="drone" value="Moderately Agree" />
+          <label for="louie">Moderately Agree</label>
+        </div>
+
+        <div style = 'margin-bottom: 75px; font-size: 23px;line-height:200%;'>
+          <input type="radio" id="louie" name="drone" value="Strongly Agree" />
+          <label for="louie">Strongly Agree</label>
+        </div>`,
+        button_label: 'Submit',
+        data: {
+          question: jsPsych.timelineVariable("question")
+        }
+    };
+
+    /* BMRQ procedure */
+    var bmrq_procedure = {
+      timeline: [bmrq_trial],
+      timeline_variables: bmrq_questions,
+      repetitions: 1,
+      randomize_order: true
+    };
+
+    /* GOLD-MSI instruction text */
+    var gold_msi_instructions_text = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>In this portion of the experiment, you will be
+      presented with multiple choice questions and questions with typed answers. </p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>As with the previous sections, be as honest as
+      possible with each response and be careful not to accidentally provide a response you did not intend to.</p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>Press the space bar to begin.</p>
+      `,
+      choices: "NO_KEYS",
+
+      trial_duration: 9000
+    };
+
+    /* GOLD-MSI instruction response */
+    var gold_msi_instructions_text_resp = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>In this portion of the experiment, you will be
+      presented with multiple choice questions and questions with typed answers. </p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>As with the previous sections, be as honest as
+      possible with each response and be careful not to accidentally provide a response you did not intend to.</p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>Press the space bar to begin.</p>
+      `,
+      choices: [' ']
+
+    };
+
+    /* GOLD-MSI trial */
+    var gold_msi_trial = {
+        type: jsPsychSurveyHtmlForm,
+        preamble: () => { return `<div style = 'margin-bottom: 75px; margin-left: 13px; font-size: 25px;'>${jsPsych.timelineVariable("question")}</div>`;},
+        html: jsPsych.timelineVariable("html_code"),
+        button_label: 'Submit',
+        data: {
+          question: jsPsych.timelineVariable("question")
+        }
+    };
+
+    /* GOLD-MSI procedure */
+    var gold_msi_procedure = {
+      timeline: [gold_msi_trial],
+      timeline_variables: gold_msi_array,
+      randomize_order: true,
+    };
+
+    /* STOMP instruction text */
+    var stomp_instructions_text = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>For the final subsection of the experiment, please
+      indicate your preference level for each genre of music presented using the scale provided. </p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>Press the space bar to begin.</p>
+      `,
+      choices: "NO_KEYS",
+
+      trial_duration: 5000
+    };
+
+    /* STOMP instruction response */
+    var stomp_instructions_text_resp = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>For the final subsection of the experiment, please
+      indicate your preference level for each genre of music presented using the scale provided. </p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>Press the space bar to begin.</p>
+      `,
+      choices: [' ']
+
+    };
+
+    /* STOMP trial */
+    var stomp_trial = {
+        type: jsPsychSurveyHtmlForm,
+        preamble: () => { return `<div style = 'margin-bottom: 75px; margin-left: 13px; font-size: 25px;'>${jsPsych.timelineVariable("genre_text")}</div>`;},
+        html:`<div style = 'margin-bottom: 5px; font-size: 23px;line-height:200%;'>
+        <input type="radio" id="huey" name="drone" value="Strongly Dislike" />
+        <label for="huey">Strongly Dislike</label>
+        </div>
+
+        <div style = 'margin-bottom: 5px; font-size: 23px;line-height:200%;'>
+          <input type="radio" id="dewey" name="drone" value="Moderately Dislike" />
+          <label for="dewey">Moderately Dislike</label>
+        </div>
+
+        <div style = 'margin-bottom: 5px; font-size: 23px;line-height:200%;'>
+          <input type="radio" id="louie" name="drone" value="Mildly Dislike" />
+          <label for="louie">Mildly Dislike</label>
+        </div>
+
+        <div style = 'margin-bottom: 5px; font-size: 23px;line-height:200%;'>
+          <input type="radio" id="louie" name="drone" value="Neither Like nor Dislike" checked />
+          <label for="louie">Neither Like nor Dislike</label>
+        </div>
+
+        <div style = 'margin-bottom: 5px; font-size: 23px;line-height:200%;'>
+          <input type="radio" id="louie" name="drone" value="Mildly Like" />
+          <label for="louie">Mildly Like</label>
+        </div>
+
+        <div style = 'margin-bottom: 5px; font-size: 23px;line-height:200%;'>
+          <input type="radio" id="louie" name="drone" value="Moderately Like" />
+          <label for="louie">Moderately Like</label>
+        </div>
+
+        <div style = 'margin-bottom: 75px; font-size: 23px;line-height:200%;'>
+          <input type="radio" id="louie" name="drone" value="Strongly Like" />
+          <label for="louie">Strongly Like</label>
+        </div>
+      `,
+        button_label: 'Submit',
+        data: {
+          question: jsPsych.timelineVariable("genre_text")
+        }
+    };
+
+    /* STOMP procedure */
+    var stomp_procedure = {
+      timeline: [stomp_trial],
+      timeline_variables: stomp_questions,
+      repetitions: 1,
+      randomize_order: true
+    };
+
+    /* Goodbye text */
+    var goodbye_text = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>Thank you for participating in this study. By
+      participating, you are helping scientists determine why we like the music we like. </p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>Please note that the purpose of the experiment
+      was not to test your knowledge of popular music. You were asked if you knew the songs the melodies come
+      from because melodies familiar to you will be excluded from analysis. So don't worry if you did not recognize
+      very many melodies! </p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>If you have any questions or concerns, please email
+      the primary researcher Madeline Hamilton at m.a.hamilton@qmul.ac.uk, or the supervising researcher Marcus Pearce at
+      marcus.pearce@qmul.ac.uk. </p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>Press the space bar to end the experiment.</p>
+      `,
+      choices: "NO_KEYS",
+
+      trial_duration: 1
+    };
+
+    /* Goodbye text response */
+    var goodbye_text_resp = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>Thank you for participating in this study. By
+      participating, you are helping scientists determine why we like the music we like. </p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>Please note that the purpose of the experiment
+      was not to test your knowledge of popular music. You were asked if you knew the songs the melodies come
+      from because melodies familiar to you will be excluded from analysis. So don't worry if you did not recognize
+      very many melodies! </p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>If you have any questions or concerns, please email
+      the primary researcher Madeline Hamilton at m.a.hamilton@qmul.ac.uk, or the supervising researcher Marcus Pearce at
+      marcus.pearce@qmul.ac.uk. </p>
+      <p class = 'space'; style = 'text-align: left; font-size: 30px;'>Press the space bar to end the experiment.</p>
+      `,
+      choices: [' ']
+
+    };
+
+    /* Intro */
+    timeline.push(intro_text);
+    timeline.push(intro_resp);
+    timeline.push(info_text_1);
+    timeline.push(info_text_1_resp);
+    timeline.push(info_text_2);
+    timeline.push(info_text_2_resp);
+    timeline.push(consent_text);
+    timeline.push(consent_text_resp);
+    timeline.push(welcome_text);
+    timeline.push(welcome_text_resp);
+
+    /* Melody portion */
+
+    timeline.push(melody_instruction_text);
+    timeline.push(melody_instruction_text_resp);
+    timeline.push(rating_mel_text);
+    timeline.push(rating_mel_text_response);
+    timeline.push(attention_trial_text);
+    timeline.push(attention_trial_response);
+    timeline.push(practice_melody_text);
+    timeline.push(practice_melody_text_resp);
+    timeline.push(practice_mel_procedure);
+    timeline.push(practice_trials_over_text);
+    timeline.push(practice_trials_over_text_resp);
+    timeline.push(mel_procedure);
+    timeline.push(melody_trials_over_text);
+    timeline.push(melody_trials_over_text_resp);
+
+
+    /* Survey portion */
+    /*
+    timeline.push(survey_practice_text);
+    timeline.push(survey_practice_text_resp);
+    timeline.push(big_five_instructions_text);
+    timeline.push(big_five_instructions_text_resp);
+    timeline.push(big_five_procedure);
+    timeline.push(bmrq_instructions_text);
+    timeline.push(bmrq_instructions_text_resp);
+    timeline.push(bmrq_procedure);
+    timeline.push(gold_msi_instructions_text);
+    timeline.push(gold_msi_instructions_text_resp);
+    timeline.push(gold_msi_procedure);
+    timeline.push(stomp_instructions_text);
+    timeline.push(stomp_instructions_text_resp);
+    timeline.push(stomp_procedure);
+    */
+
+
+    /* Conclusion */
+    /*
+    timeline.push(goodbye_text);
+    timeline.push(goodbye_text_resp);
+    */
+
+    /* start the experiment */
+    jsPsych.run(timeline);
+
+  </script>
+</html>
